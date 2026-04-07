@@ -8,12 +8,12 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
 
-body, html{
-margin:0;padding:0;width:100%;height:100%;
-overflow:hidden;background:#000;color:#fff;
-font-family:'Cormorant Garamond',serif;
-display:flex;justify-content:center;align-items:center;
-user-select:none;touch-action:none;
+body, html {
+margin:0; padding:0; width:100%; height:100%;
+overflow:hidden; background:#000; color:#fff;
+font-family:'Cormorant Garamond', serif;
+display:flex; justify-content:center; align-items:center;
+user-select:none; touch-action:none;
 }
 
 #canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
@@ -21,21 +21,16 @@ user-select:none;touch-action:none;
 .container{z-index:10;position:relative;text-align:center;width:90%;pointer-events:none;}
 
 h1{
-font-size:8vw;font-weight:300;letter-spacing:.15em;
-text-transform:uppercase;margin:0;
+font-size:8vw;font-weight:300;letter-spacing:.15em;text-transform:uppercase;margin:0;
 text-shadow:0 0 25px rgba(255,255,255,.9);
 }
 
-.instruction{
-font-size:4vw;color:rgba(255,255,255,.7);
-margin-top:20px;font-style:italic;
-}
+.instruction{font-size:4vw;color:rgba(255,255,255,.7);margin-top:20px;font-style:italic;}
 
 .floating-word{
-position:absolute;color:#fff;pointer-events:none;
-font-style:italic;animation:floatUp 3.5s ease-out forwards;
-z-index:15;font-size:5vw;white-space:nowrap;
-text-shadow:0 0 15px #fff;
+position:absolute;color:#fff;pointer-events:none;font-style:italic;
+animation:floatUp 3.5s ease-out forwards;z-index:15;font-size:5vw;
+white-space:nowrap;text-shadow:0 0 15px #fff;
 }
 
 @keyframes floatUp{
@@ -45,52 +40,32 @@ text-shadow:0 0 15px #fff;
 }
 
 #secret-btn{
-position:fixed;bottom:50px;z-index:20;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.3);
-color:#fff;padding:12px 30px;
-letter-spacing:2px;border-radius:30px;
-font-size:4vw;backdrop-filter:blur(5px);
+position:fixed;bottom:50px;z-index:20;background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.3);color:#fff;padding:12px 30px;
+letter-spacing:2px;border-radius:30px;font-size:4vw;backdrop-filter:blur(5px);
 }
 
 #modal{
-display:none;position:fixed;top:0;left:0;
-width:100%;height:100%;background:rgba(0,0,0,.95);
-z-index:200;justify-content:center;align-items:center;
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,.95);z-index:200;justify-content:center;align-items:center;
 }
 
-.modal-content{
-width:80%;text-align:center;font-size:5.5vw;
-font-style:italic;line-height:1.8;
-}
-
-/* 💖 MENSAJE SORPRESA */
-#loveMessage{
-position:fixed;
-top:50%;left:50%;
-transform:translate(-50%,-50%);
-font-size:7vw;text-align:center;
-opacity:0;z-index:30;
-text-shadow:0 0 25px rgba(255,255,255,.9);
-transition:3s;width:90%;
-}
+.modal-content{width:80%;text-align:center;font-size:5.5vw;font-style:italic;line-height:1.8;}
 </style>
 </head>
 
 <body onclick="playNow(event)">
+
 <canvas id="canvas"></canvas>
 
+<!-- 🎵 MUSICA -->
 <audio id="player" loop preload="auto">
-<source src="https://raw.githubusercontent.com/Arevalo-al/mi-musica/main/No%20Digas%20Nada.mp3" type="audio/mpeg">
+<source src="https://github.com/Arevalo-al/mi-musica/raw/refs/heads/main/No%20Digas%20Nada.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
 <h1>Lo que fue,<br>será eterno.</h1>
-<p class="instruction" id="guide">Toca la pantalla para empezar...</p>
-</div>
-
-<div id="loveMessage">
-Si estás viendo esto… eres lo más bonito que me ha pasado 💖
+<p class="instruction" id="guide">Toca en cualquier lugar para empezar...</p>
 </div>
 
 <button id="secret-btn" onclick="showMsg(event)">NUESTRO SECRETO</button>
@@ -104,30 +79,14 @@ Si estás viendo esto… eres lo más bonito que me ha pasado 💖
 
 <script>
 let isStarted=false;
-const myFrases=["Te amo","Siempre","Inolvidable","Te quiero","Eterno","Me encantas"];
+const myFrases=["Me encantas","Te amo","Te extraño","Siempre","Inolvidable","Feliz","Te quiero"];
 
 function playNow(e){
 const m=document.getElementById('player');
-
 if(!isStarted){
-m.play().catch(()=>{});
+m.play().catch(()=>console.log("Audio bloqueado"));
 document.getElementById('guide').style.opacity="0";
 isStarted=true;
-
-setTimeout(()=>{
-const msg=document.getElementById("loveMessage");
-document.querySelector(".container").style.opacity="0";
-document.getElementById("secret-btn").style.opacity="0";
-
-msg.style.opacity="1";
-
-setTimeout(()=>{
-msg.style.opacity="0";
-document.querySelector(".container").style.opacity="1";
-document.getElementById("secret-btn").style.opacity="1";
-},8000);
-
-},15000);
 }
 
 if(e.target.tagName!=='BUTTON' && document.getElementById('modal').style.display!=='flex'){
@@ -141,6 +100,7 @@ setTimeout(()=>span.remove(),3500);
 }
 }
 
+/* ⭐ ESTRELLAS */
 const cvs=document.getElementById('canvas');
 const ctx=cvs.getContext('2d');
 let stars=[];
@@ -154,11 +114,16 @@ this.vx=(Math.random()-.5)*.4;
 this.vy=(Math.random()-.5)*.4;
 this.s=Math.random()*2.5;
 }
-draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();}
+draw(){
+ctx.beginPath();
+ctx.arc(this.x,this.y,this.s,0,Math.PI*2);
+ctx.fillStyle='white';
+ctx.fill();
+}
 update(){
-this.x+=this.vx;this.y+=this.vy;
-if(this.x<0||this.x>cvs.width)this.vx*=-1;
-if(this.y<0||this.y>cvs.height)this.vy*=-1;
+this.x+=this.vx; this.y+=this.vy;
+if(this.x<0||this.x>cvs.width) this.vx*=-1;
+if(this.y<0||this.y>cvs.height) this.vy*=-1;
 this.draw();
 }
 }
@@ -167,12 +132,25 @@ function setup(){
 cvs.width=window.innerWidth;
 cvs.height=window.innerHeight;
 stars=[];
-for(let i=0;i<110;i++)stars.push(new Star());
+for(let i=0;i<110;i++) stars.push(new Star());
 }
 
 function animate(){
 ctx.clearRect(0,0,cvs.width,cvs.height);
 stars.forEach(s=>s.update());
+
+for(let i=0;i<stars.length;i++){
+for(let j=i;j<stars.length;j++){
+let d=((stars[i].x-stars[j].x)**2)+((stars[i].y-stars[j].y)**2);
+if(d<15000){
+ctx.strokeStyle=`rgba(255,255,255,${1-d/15000})`;
+ctx.lineWidth=.8;
+ctx.beginPath();
+ctx.moveTo(stars[i].x,stars[i].y);
+ctx.lineTo(stars[j].x,stars[j].y);
+ctx.stroke();
+}}}
+
 requestAnimationFrame(animate);
 }
 
@@ -180,7 +158,9 @@ function showMsg(e){e.stopPropagation();document.getElementById('modal').style.d
 function hideMsg(){document.getElementById('modal').style.display='none';}
 
 window.addEventListener('resize',setup);
-setup();animate();
+setup();
+animate();
 </script>
+
 </body>
 </html>
