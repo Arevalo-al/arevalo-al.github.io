@@ -111,8 +111,6 @@ font-style: italic;
 line-height: 1.8;
 color: #fff;
 }
-
-  
 </style>
 </head>
 
@@ -143,10 +141,10 @@ const myFrases = ["Me Encantas","Te Amo","Te extraño","Siempre","Inolvidable","
 
 function playNow(e){
 const m=document.getElementById('player');
-if (!isStarted) {
-    m.play().catch(e => console.log("Audio bloqueado"));
-    document.getElementById('guide').style.opacity = "0";
-    isStarted = true;
+if(!isStarted){
+m.play().catch(e=>console.log("Audio bloqueado"));
+document.getElementById('guide').style.opacity="0";
+isStarted=true;
 }
 if(e.target.tagName!=='BUTTON'&&document.getElementById('modal').style.display!=='flex'){
 const span=document.createElement('div');
@@ -157,7 +155,7 @@ span.style.top=e.clientY+'px';
 document.body.appendChild(span);
 setTimeout(()=>span.remove(),3500);
 }
-
+}
 
 const cvs=document.getElementById('canvas');
 const ctx=cvs.getContext('2d');
