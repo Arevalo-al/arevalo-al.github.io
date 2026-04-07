@@ -111,6 +111,21 @@ font-style: italic;
 line-height: 1.8;
 color: #fff;
 }
+#loveMessage{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:7vw;
+text-align:center;
+opacity:0;
+z-index:30;
+pointer-events:none;
+text-shadow:0 0 25px rgba(255,255,255,0.9);
+transition:3s;
+width:90%;
+}
+  
 </style>
 </head>
 
@@ -122,6 +137,7 @@ color: #fff;
 </audio>
 
 <div class="container">
+  <div id="loveMessage">Si estás viendo esto… es porque eres lo más bonito que me ha pasado 💖</div>
 <h1>Lo que fue,<br>será eterno.</h1>
 <p class="instruction" id="guide">Toca en cualquier lugar para empezar...</p>
 </div>
@@ -141,10 +157,22 @@ const myFrases = ["Me Encantas","Te Amo","Te extraño","Siempre","Inolvidable","
 
 function playNow(e){
 const m=document.getElementById('player');
-if(!isStarted){
-m.play().catch(e=>console.log("Audio bloqueado"));
-document.getElementById('guide').style.opacity="0";
-isStarted=true;
+if (!isStarted) {
+    m.play().catch(e => console.log("Audio bloqueado"));
+    document.getElementById('guide').style.opacity = "0";
+    isStarted = true;
+
+    // 💖 MENSAJE DESPUÉS DE 15 SEGUNDOS
+    setTimeout(()=>{
+        const msg = document.getElementById("loveMessage");
+        msg.style.opacity = "1";
+
+        // desaparece después de 8 segundos
+        setTimeout(()=>{
+            msg.style.opacity = "0";
+        },8000);
+
+    },10000);
 }
 if(e.target.tagName!=='BUTTON'&&document.getElementById('modal').style.display!=='flex'){
 const span=document.createElement('div');
