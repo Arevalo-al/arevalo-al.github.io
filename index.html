@@ -8,108 +8,71 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
 
-body, html {
-margin: 0;
-padding: 0;
-width: 100%;
-height: 100%;
-overflow: hidden;
-background-color: #000;
-color: #fefefe;
-font-family: 'Cormorant Garamond', serif;
-display: flex;
-justify-content: center;
-align-items: center;
-user-select: none;
-touch-action: none;
+body, html{
+margin:0;padding:0;width:100%;height:100%;
+overflow:hidden;background:#000;color:#fff;
+font-family:'Cormorant Garamond',serif;
+display:flex;justify-content:center;align-items:center;
+user-select:none;touch-action:none;
 }
 
-#canvas {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: 1;
+#canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
+
+.container{z-index:10;position:relative;text-align:center;width:90%;pointer-events:none;}
+
+h1{
+font-size:8vw;font-weight:300;letter-spacing:.15em;
+text-transform:uppercase;margin:0;
+text-shadow:0 0 25px rgba(255,255,255,.9);
 }
 
-.container {
-z-index: 10;
-position: relative;
-text-align: center;
-width: 90%;
-pointer-events: none;
+.instruction{
+font-size:4vw;color:rgba(255,255,255,.7);
+margin-top:20px;font-style:italic;
 }
 
-h1 {
-font-size: 8vw;
-font-weight: 300;
-letter-spacing: 0.15em;
-text-transform: uppercase;
-margin: 0;
-text-shadow: 0 0 25px rgba(255,255,255,0.9);
+.floating-word{
+position:absolute;color:#fff;pointer-events:none;
+font-style:italic;animation:floatUp 3.5s ease-out forwards;
+z-index:15;font-size:5vw;white-space:nowrap;
+text-shadow:0 0 15px #fff;
 }
 
-.instruction {
-font-size: 4vw;
-color: rgba(255, 255, 255, 0.7);
-margin-top: 20px;
-font-style: italic;
+@keyframes floatUp{
+0%{transform:translate(-50%,0);opacity:0;}
+30%{opacity:1;}
+100%{transform:translate(-50%,-150px);opacity:0;}
 }
 
-.floating-word {
-position: absolute;
-color: #fff;
-pointer-events: none;
-font-style: italic;
-animation: floatUp 3.5s ease-out forwards;
-z-index: 15;
-font-size: 5vw;
-white-space: nowrap;
-text-shadow: 0 0 15px #fff;
+#secret-btn{
+position:fixed;bottom:50px;z-index:20;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.3);
+color:#fff;padding:12px 30px;
+letter-spacing:2px;border-radius:30px;
+font-size:4vw;backdrop-filter:blur(5px);
 }
 
-@keyframes floatUp {
-0% { transform: translate(-50%, 0); opacity: 0; }
-30% { opacity: 1; }
-100% { transform: translate(-50%, -150px); opacity: 0; }
+#modal{
+display:none;position:fixed;top:0;left:0;
+width:100%;height:100%;background:rgba(0,0,0,.95);
+z-index:200;justify-content:center;align-items:center;
 }
 
-#secret-btn {
-position: fixed;
-bottom: 50px;
-z-index: 20;
-background: rgba(255,255,255,0.05);
-border: 1px solid rgba(255,255,255,0.3);
-color: #fff;
-padding: 12px 30px;
-font-family: inherit;
-letter-spacing: 2px;
-border-radius: 30px;
-font-size: 4vw;
-backdrop-filter: blur(5px);
+.modal-content{
+width:80%;text-align:center;font-size:5.5vw;
+font-style:italic;line-height:1.8;
 }
 
-#modal {
-display: none;
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0,0,0,0.95);
-z-index: 200;
-justify-content: center;
-align-items: center;
-}
-
-.modal-content {
-width: 80%;
-text-align: center;
-font-size: 5.5vw;
-font-style: italic;
-line-height: 1.8;
-color: #fff;
+/* 💖 MENSAJE SORPRESA */
+#loveMessage{
+position:fixed;
+top:50%;left:50%;
+transform:translate(-50%,-50%);
+font-size:7vw;text-align:center;
+opacity:0;z-index:30;
+text-shadow:0 0 25px rgba(255,255,255,.9);
+transition:3s;width:90%;
 }
 </style>
 </head>
@@ -118,12 +81,16 @@ color: #fff;
 <canvas id="canvas"></canvas>
 
 <audio id="player" loop preload="auto">
-  <source src="https://raw.githubusercontent.com/Arevalo-al/mi-musica/main/No%20Digas%20Nada.mp3" type="audio/mpeg">
+<source src="https://raw.githubusercontent.com/Arevalo-al/mi-musica/main/No%20Digas%20Nada.mp3" type="audio/mpeg">
 </audio>
 
 <div class="container">
 <h1>Lo que fue,<br>será eterno.</h1>
-<p class="instruction" id="guide">Toca en cualquier lugar para empezar...</p>
+<p class="instruction" id="guide">Toca la pantalla para empezar...</p>
+</div>
+
+<div id="loveMessage">
+Si estás viendo esto… eres lo más bonito que me ha pasado 💖
 </div>
 
 <button id="secret-btn" onclick="showMsg(event)">NUESTRO SECRETO</button>
@@ -131,22 +98,30 @@ color: #fff;
 <div id="modal" onclick="hideMsg()">
 <div class="modal-content">
 <p>"Hay huellas que el tiempo no borra. Gracias por ser mi parte favorita de la historia."</p>
-<br><small style="font-size: 3.5vw; opacity: 0.5;">(Toca para volver)</small>
+<br><small style="font-size:3.5vw;opacity:.5;">(Toca para volver)</small>
 </div>
 </div>
 
 <script>
-let isStarted = false;
-const myFrases = ["Me Encantas","Te Amo","Te extraño","Siempre","Inolvidable","Feliz","Te quiero"];
+let isStarted=false;
+const myFrases=["Te amo","Siempre","Inolvidable","Te quiero","Eterno","Me encantas"];
 
 function playNow(e){
 const m=document.getElementById('player');
+
 if(!isStarted){
-m.play().catch(e=>console.log("Audio bloqueado"));
+m.play().catch(()=>{});
 document.getElementById('guide').style.opacity="0";
 isStarted=true;
+
+setTimeout(()=>{
+const msg=document.getElementById("loveMessage");
+msg.style.opacity="1";
+setTimeout(()=>{msg.style.opacity="0";},8000);
+},15000);
 }
-if(e.target.tagName!=='BUTTON'&&document.getElementById('modal').style.display!=='flex'){
+
+if(e.target.tagName!=='BUTTON' && document.getElementById('modal').style.display!=='flex'){
 const span=document.createElement('div');
 span.className='floating-word';
 span.innerText=myFrases[Math.floor(Math.random()*myFrases.length)];
@@ -166,19 +141,13 @@ constructor(){this.reset();}
 reset(){
 this.x=Math.random()*cvs.width;
 this.y=Math.random()*cvs.height;
-this.vx=(Math.random()-0.5)*0.4;
-this.vy=(Math.random()-0.5)*0.4;
+this.vx=(Math.random()-.5)*.4;
+this.vy=(Math.random()-.5)*.4;
 this.s=Math.random()*2.5;
 }
-draw(){
-ctx.beginPath();
-ctx.arc(this.x,this.y,this.s,0,Math.PI*2);
-ctx.fillStyle='white';
-ctx.fill();
-}
+draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.s,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();}
 update(){
-this.x+=this.vx;
-this.y+=this.vy;
+this.x+=this.vx;this.y+=this.vy;
 if(this.x<0||this.x>cvs.width)this.vx*=-1;
 if(this.y<0||this.y>cvs.height)this.vy*=-1;
 this.draw();
@@ -195,19 +164,6 @@ for(let i=0;i<110;i++)stars.push(new Star());
 function animate(){
 ctx.clearRect(0,0,cvs.width,cvs.height);
 stars.forEach(s=>s.update());
-for(let i=0;i<stars.length;i++){
-for(let j=i;j<stars.length;j++){
-let d=((stars[i].x-stars[j].x)**2)+((stars[i].y-stars[j].y)**2);
-if(d<15000){
-ctx.strokeStyle=`rgba(255,255,255,${1-d/15000})`;
-ctx.lineWidth=0.8;
-ctx.beginPath();
-ctx.moveTo(stars[i].x,stars[i].y);
-ctx.lineTo(stars[j].x,stars[j].y);
-ctx.stroke();
-}
-}
-}
 requestAnimationFrame(animate);
 }
 
@@ -217,6 +173,5 @@ function hideMsg(){document.getElementById('modal').style.display='none';}
 window.addEventListener('resize',setup);
 setup();animate();
 </script>
-
 </body>
 </html>
