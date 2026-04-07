@@ -72,15 +72,27 @@ background:rgba(0,0,0,.95);z-index:200;justify-content:center;align-items:center
 
 <div id="modal" onclick="hideMsg()">
 <div class="modal-content">
-<p>"Hay huellas que el tiempo no borra. Gracias por ser mi parte favorita de la historia."</p>
-<br><small style="font-size:3.5vw;opacity:.5;">(Toca para volver)</small>
+    <p id="fraseSecreta"></p>
+    <br>
+    <small style="font-size:3.5vw;opacity:.5;">(Toca para volver)</small>
 </div>
 </div>
 
 <script>
 let isStarted=false;
 const myFrases=["Me encantas","Te amo","Te extraño","Siempre","Inolvidable","Feliz","Te quiero"];
+const frasesSecretas = [
+"Hay huellas que el tiempo no borra 💫",
+"Eres mi casualidad favorita ❤️",
+"Contigo todo tiene sentido ✨",
+"Gracias por existir 🫶",
+"Eres mi pensamiento bonito del día ☀️",
+"Siempre voy a querer verte feliz 💖",
+"Eres lo más lindo que me pasó 🌙"
+];
 
+let intervaloFrases;
+let indiceFrase = 0;
 function playNow(e){
 const m=document.getElementById('player');
 if(!isStarted){
@@ -154,8 +166,32 @@ ctx.stroke();
 requestAnimationFrame(animate);
 }
 
-function showMsg(e){e.stopPropagation();document.getElementById('modal').style.display='flex';}
-function hideMsg(){document.getElementById('modal').style.display='none';}
+function showMsg(e) {
+    e.stopPropagation();
+    document.getElementById('modal').style.display = 'flex';
+
+    const texto = document.getElementById("fraseSecreta");
+
+    // mostrar primera frase inmediatamente
+    texto.innerText = frasesSecretas[0];
+    indiceFrase = 1;
+
+    // cambiar cada 5 segundos
+    intervaloFrases = setInterval(()=>{
+        texto.style.opacity = "0";
+
+        setTimeout(()=>{
+            texto.innerText = frasesSecretas[indiceFrase];
+            texto.style.opacity = "1";
+            indiceFrase = (indiceFrase + 1) % frasesSecretas.length;
+        },500);
+
+    },5000);
+}
+function hideMsg() {
+    document.getElementById('modal').style.display = 'none';
+    clearInterval(intervaloFrases);
+}
 
 window.addEventListener('resize',setup);
 setup();
