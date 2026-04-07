@@ -116,8 +116,17 @@ isStarted=true;
 
 setTimeout(()=>{
 const msg=document.getElementById("loveMessage");
+document.querySelector(".container").style.opacity="0";
+document.getElementById("secret-btn").style.opacity="0";
+
 msg.style.opacity="1";
-setTimeout(()=>{msg.style.opacity="0";},8000);
+
+setTimeout(()=>{
+msg.style.opacity="0";
+document.querySelector(".container").style.opacity="1";
+document.getElementById("secret-btn").style.opacity="1";
+},8000);
+
 },15000);
 }
 
