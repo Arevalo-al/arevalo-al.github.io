@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Siempre ❤️</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap');
+
+body,html{
+margin:0;padding:0;width:100%;height:100%;
+overflow:hidden;background:#000;color:#fff;
+font-family:'Cormorant Garamond',serif;
+display:flex;justify-content:center;align-items:center;
+user-select:none;touch-action:none;
+}
+
+#canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;}
+
+.container{z-index:10;position:relative;text-align:center;width:90%;pointer-events:none;}
+
+h1{
+font-size:8vw;font-weight:300;letter-spacing:.15em;text-transform:uppercase;margin:0;
+text-shadow:0 0 25px rgba(255,255,255,.9);
+}
+
+.instruction{font-size:4vw;color:rgba(255,255,255,.7);margin-top:20px;font-style:italic;transition:1s;}
+
+.floating-word{
+position:absolute;color:#fff;pointer-events:none;font-style:italic;
+animation:floatUp 3.5s ease-out forwards;z-index:15;font-size:5vw;
+white-space:nowrap;text-shadow:0 0 15px #fff;
+}
+
+@keyframes floatUp{
+0%{transform:translate(-50%,0);opacity:0;}
+30%{opacity:1;}
+100%{transform:translate(-50%,-150px);opacity:0;}
+}
+
+#secret-btn{
+position:fixed;bottom:50px;z-index:20;background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.3);color:#fff;padding:12px 30px;
+letter-spacing:2px;border-radius:30px;font-size:4vw;backdrop-filter:blur(5px);
+}
+
+#modal{
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,.95);z-index:200;justify-content:center;align-items:center;
+}
+
+.modal-content{width:80%;text-align:center;font-size:5.5vw;font-style:italic;line-height:1.8;}
+</style>
+</head>
+
+<body onclick="startExperience(event)">
+
+<canvas id="canvas"></canvas>
+
+<!-- reproductor oculto -->
+<div id="player" style="position:absolute;top:-1000px;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<div class="container">
+<h1>Lo que fue,<br>será eterno.</h1>
+<p class="instruction" id="inst">Toca la pantalla para escuchar…</p>
+</div>
+
+<button id="secret-btn" onclick="openModal(event)">NUESTRO SECRETO</button>
+
+<div id="modal" onclick="closeModal()">
+<div class="modal-content">
+<p>"Hay huellas que el tiempo no borra, y amores que nos enseñan a brillar como las estrellas. Gracias por ser mi parte favorita de la historia."</p>
+<br><small style="font-size:3.5vw;opacity:.5;">(Toca para volver)</small>
+</div>
+</div>
+
+<script>
+let started=false;
+
+// SOLO palabras lindas 💕
+const words=["Te quiero","Siempre","Eterno","Inolvidable","Te extraño","Mi persona favorita","Para siempre","Nuestro recuerdo"];
+
+let player;
+function onYouTubeIframeAPIReady(){
+player=new YT.Player('player',{
+height:'0',width:'0',
+videoId:'rDRyzGh3aBg',
+playerVars:{
+controls:0,
+rel:0,
+playsinline:1,
+modestbranding:1,
+loop:1,
+playlist:'rDRyzGh3aBg'
+}
+});
+}
+
+function startExperience(e){
+if(!started){
+if(player && player.playVideo){
+player.playVideo();
+}
+document.getElementById('inst').style.opacity="0";
+started=true;
+}
+
+if(e.target.tagName!=='BUTTON' && document.getElementById('modal').style.display!=='flex'){
+const word=document.createElement('div');
+word.className='floating-word';
+word.innerText=words[Math.floor(Math.random()*words.length)];
+word.style.left=e.clientX+'px';
+word.style.top=e.clientY+'px';
+document.body.appendChild(word);
+setTimeout(()=>word.remove(),3500);
+}
+}
+
+// estrellas ✨
+const canvas=document.getElementById('canvas');
+const ctx=canvas.getContext('2d');
+let particles=[];
+
+class Particle{
+constructor(){this.init();}
+init(){
+this.x=Math.random()*canvas.width;
+this.y=Math.random()*canvas.height;
+this.dx=(Math.random()-.5)*.4;
+this.dy=(Math.random()-.5)*.4;
+this.size=Math.random()*2.5;
+}
+draw(){
+ctx.beginPath();
+ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+ctx.fillStyle='white';
+ctx.fill();
+}
+update(){
+this.x+=this.dx; this.y+=this.dy;
+if(this.x<0||this.x>canvas.width) this.dx*=-1;
+if(this.y<0||this.y>canvas.height) this.dy*=-1;
+this.draw();
+}
+}
+
+function setup(){
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+particles=[];
+for(let i=0;i<110;i++) particles.push(new Particle());
+}
+
+function drawLines(){
+for(let i=0;i<particles.length;i++){
+for(let j=i;j<particles.length;j++){
+let d=((particles[i].x-particles[j].x)**2)+((particles[i].y-particles[j].y)**2);
+if(d<15000){
+ctx.strokeStyle=`rgba(255,255,255,${1-d/15000})`;
+ctx.lineWidth=.8;
+ctx.beginPath();
+ctx.moveTo(particles[i].x,particles[i].y);
+ctx.lineTo(particles[j].x,particles[j].y);
+ctx.stroke();
+}}}
+
+function loop(){
+ctx.clearRect(0,0,canvas.width,canvas.height);
+particles.forEach(p=>p.update());
+drawLines();
+requestAnimationFrame(loop);
+}
+
+function openModal(e){e.stopPropagation();document.getElementById('modal').style.display='flex';}
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+window.addEventListener('resize',setup);
+setup(); loop();
+</script>
+
+</body>
+</html>
